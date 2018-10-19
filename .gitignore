@@ -67,4 +67,4 @@ hs_err_pid*
 .classpath
 
 ## Excludes the generated files
-bin/
+target/
