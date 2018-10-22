@@ -49,7 +49,8 @@ public class PersonService {
         person.setPassword(receivedPerson.getPassword()); //Already validated pre method call.
         person.setUsername(validateAndReturnUsername(receivedPerson));
         person.setCountry(receivedPerson.getCountry()); //Error thrown in REST if the country is not in accepted list.
-        person.setBirthDate(validateAndReturnBirthdate(receivedPerson));
+        person.setBirthDate(validateAndReturnBirthday(receivedPerson));
+        person.setPhone(validateAndReturnPhone(receivedPerson));
 
         return person;
     }
@@ -134,19 +135,29 @@ public class PersonService {
     }
 
     /**
-     * validateAndReturnBirthdate
+     * validateAndReturnBirthday
      * Checks the validity of the given birthday and returns it.
      * @param receivedPerson - The person received from the Front-end
      * @return The birthday of the Person
      * @throws PersonServiceException - Throw error if the birthday was null or invalid.
      */
-    private LocalDate validateAndReturnBirthdate(Person receivedPerson) throws PersonServiceException {
+    private LocalDate validateAndReturnBirthday(Person receivedPerson) throws PersonServiceException {
         LocalDate currentDate18YearsAgo = LocalDate.now().minusYears(18);
 
         if ((receivedPerson.getBirthDate() != null) && receivedPerson.getBirthDate().isBefore(currentDate18YearsAgo)) {
             return receivedPerson.getBirthDate();
         } else {
             throw new PersonServiceException("Invalid birthday.");
+        }
+    }
+
+    private String validateAndReturnPhone(Person receivedPerson) throws PersonServiceException {
+        String regex = "^[0-9]+";
+        if (stringUtility.isStringNotNullAndEmpty(receivedPerson.getPhone())
+                && receivedPerson.getPhone().matches(regex)) {
+            return receivedPerson.getPhone();
+        } else {
+            throw new PersonServiceException("Invalid phone number.");
         }
     }
 

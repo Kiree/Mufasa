@@ -36,7 +36,8 @@ public class PersonServiceTest {
 	@Before
 	public void init() {
 		personService = new PersonService();
-		validPerson = new Person(validFirstName, validLastName, validUsername, validPassword, validCountry, validBirthday);
+		validPerson = new Person(validFirstName, validLastName, validUsername, validPassword, validCountry,
+                                validBirthday, validPhone);
 	}
 
 	@Test (expected = PersonServiceException.class)
@@ -236,6 +237,33 @@ public class PersonServiceTest {
         Person receivedPerson = personService.createPersonFromRESTCall(validPerson);
     }
 
+    @Test (expected =  PersonServiceException.class)
+    public void testCreatePerson_phoneNull() throws PersonServiceException {
+	    //Arrange
+        String nullPhone = null;
+        validPerson.setPhone(nullPhone);
+        //Act
+        Person receivedPerson = personService.createPersonFromRESTCall(validPerson);
+    }
+
+    @Test (expected =  PersonServiceException.class)
+    public void testCreatePerson_phoneEmpty() throws PersonServiceException {
+	    //Arrange
+        String emptyPhone = "";
+        validPerson.setPhone(emptyPhone);
+        //Act
+        Person receivedPerson = personService.createPersonFromRESTCall(validPerson);
+    }
+
+    @Test (expected =  PersonServiceException.class)
+    public void testCreatePerson_phoneInvalidCharacters() throws PersonServiceException {
+	    //Arrange
+        String invalidPhone = "1337Phone!";
+        validPerson.setPhone(invalidPhone);
+        //Act
+        Person receivedPerson = personService.createPersonFromRESTCall(validPerson);
+    }
+
     @Test
     public void testCreatePerson_validPerson() throws PersonServiceException {
         //Act
@@ -247,6 +275,7 @@ public class PersonServiceTest {
         assertEquals("The password should be ModernDayWarrior", validPassword, newPerson.getPassword());
         assertEquals("The country should be United Kingdom.", validCountry, newPerson.getCountry());
         assertEquals("The birthday should be 28/02/1981", validBirthday, newPerson.getBirthDate());
+        assertEquals("The phone number should be 1234567809", validPhone, newPerson.getPhone());
     }
 
 }
