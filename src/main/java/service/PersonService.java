@@ -27,6 +27,11 @@ public class PersonService {
         if (isValidName(receivedPerson.getFirstName())) {
             person.setFirstName(receivedPerson.getFirstName());
         }
+
+        if(isValidName(receivedPerson.getLastName())) {
+            person.setLastName(receivedPerson.getLastName());
+        }
+
         return person;
     }
 

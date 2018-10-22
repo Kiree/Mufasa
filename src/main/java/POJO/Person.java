@@ -14,6 +14,9 @@ import java.util.Date;
 public class Person {
 
     private String firstName;
+
+
+
     private String lastName;
     private String username;
     private String password;
@@ -36,9 +39,11 @@ public class Person {
      * A more simple constructor with only some of the parameters
      *
      * @param firstName - The first name of the Person.
+     * @param lastName - The last name of the Person.
      */
-    public Person(String firstName) {
+    public Person(String firstName, String lastName) {
         this.firstName = firstName;
+        this.lastName = lastName;
     }
 
 

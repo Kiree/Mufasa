@@ -39,15 +39,36 @@ public class PersonServiceTest {
 		Person newPerson = personService.createPersonFromRESTCall(restPerson);
 	}
 
-	@Test
-	public void testCreatePerson_firstNameValid() throws PersonServiceException {
-		//Arrange
-		String firstName = "Tom";
-		Person restPerson = new Person(firstName);
-		//Act
-		Person newPerson = personService.createPersonFromRESTCall(restPerson);
-		//Assert
-		assertEquals("The first name should be Tom.", firstName, newPerson.getFirstName());
-	}
+	@Test (expected = PersonServiceException.class)
+    public void testCreatePerson_lastNameNull() throws PersonServiceException {
+        //Arrange
+        Person restPerson = new Person();
+        restPerson.setFirstName("Tom");
+        //Act
+        Person newPerson = personService.createPersonFromRESTCall(restPerson);
+    }
+
+    @Test (expected = PersonServiceException.class)
+    public void testCreatePerson_lastNameEmpty() throws PersonServiceException {
+        //Arrange
+        Person restPerson = new Person();
+        restPerson.setFirstName("Tom");
+        restPerson.setLastName("");
+        //Act
+        Person newPerson = personService.createPersonFromRESTCall(restPerson);
+    }
+
+    @Test
+    public void testCreatePerson_validPerson() throws PersonServiceException {
+        //Arrange
+        String firstName = "Tom";
+        String lastName = "Sawyer";
+        Person restPerson = new Person(firstName, lastName);
+        //Act
+        Person newPerson = personService.createPersonFromRESTCall(restPerson);
+        //Assert
+        assertEquals("The first name should be Tom", firstName, newPerson.getFirstName());
+        assertEquals("The last name should be Sawyer.", lastName, newPerson.getLastName());
+    }
 
 }
