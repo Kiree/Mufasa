@@ -2,6 +2,7 @@ package POJO;
 
 import enumeration.CreditCardEnum;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -18,9 +19,9 @@ public class CreditCard {
     private String holderName;
     private CreditCardEnum creditCard;
     private String creditCardNumber;
-    private Date expiryDate;
+    private LocalDate expiryDate;
 
-    public CreditCard(String holderName, CreditCardEnum creditCard, String creditCardNumber, Date expiryDate) {
+    public CreditCard(String holderName, CreditCardEnum creditCard, String creditCardNumber, LocalDate expiryDate) {
         this.holderName = holderName;
         this.creditCard = creditCard;
         this.creditCardNumber = creditCardNumber;
@@ -51,11 +52,11 @@ public class CreditCard {
         this.creditCardNumber = creditCardNumber;
     }
 
-    public Date getExpiryDate() {
+    public LocalDate getExpiryDate() {
         return expiryDate;
     }
 
-    public void setExpiryDate(Date expiryDate) {
+    public void setExpiryDate(LocalDate expiryDate) {
         this.expiryDate = expiryDate;
     }
 

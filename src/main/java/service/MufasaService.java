@@ -1,6 +1,7 @@
 package service;
 
 import POJO.Person;
+import exception.CreditCardException;
 import exception.MufasaServiceException;
 
 public class MufasaService {
@@ -20,7 +21,7 @@ public class MufasaService {
      * @return true/false, depending on the result of the transaction.
      * @throws MufasaServiceException - Thrown if errors happen or if the deduct was not available.
      */
-    public boolean testDeduct(Person person) throws MufasaServiceException {
+    public boolean testDeduct(Person person) throws MufasaServiceException, CreditCardException {
         if (!isRefundAvailable) {
             isRefundAvailable = transactionService.createTransaction(person, -0.01);
             return isRefundAvailable;
@@ -37,7 +38,7 @@ public class MufasaService {
      * @return true/false, depending on the result of the transaction.
      * @throws MufasaServiceException - Thrown if errors happen or if the refund was not available.
      */
-    public boolean testRefund(Person person) throws MufasaServiceException {
+    public boolean testRefund(Person person) throws MufasaServiceException, CreditCardException {
         if (isRefundAvailable) {
             isRefundAvailable = transactionService.createTransaction(person, 0.01);
             return isRefundAvailable;
