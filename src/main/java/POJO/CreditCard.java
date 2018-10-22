@@ -1,6 +1,15 @@
+package POJO;
+
+import enumeration.CreditCardEnum;
+
 import java.util.Date;
 
 /**
+ * @author Petteri Salonurmi
+ *
+ * CreditCard
+ * A local class for handling the external CreditCard dependency.
+ *
  * This is an external dependency. The details for the variables are retreived from an external source
  * AND MUST NOT BE STORED LOCALLY
  */

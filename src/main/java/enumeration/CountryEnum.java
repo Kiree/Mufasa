@@ -1,3 +1,5 @@
+package enumeration;
+
 public enum CountryEnum {
 
     FINLAND("Finland"),

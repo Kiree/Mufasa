@@ -1,5 +1,16 @@
+package POJO;
+
+import enumeration.CountryEnum;
+
 import java.util.Date;
 
+/**
+ * @author Petteri Salonurmi
+ *
+ * Person
+ * A person stored within the system.
+ *
+ */
 public class Person {
 
     private String firstName;
@@ -10,13 +21,14 @@ public class Person {
     private Date birthDate;
     private String phone;
     private String email;
+    private BankAccount bankAccount; //MUST NOT BE STORED LOCALLY
 
-    Person() {
+    public Person() {
 
     }
 
-    Person(String firstName, String lastName, String username, String password, CountryEnum country,
-           Date birthDate, String phone, String email) {
+    public Person(String firstName, String lastName, String username, String password, CountryEnum country,
+           Date birthDate, String phone, String email, BankAccount bankAccount) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
@@ -25,6 +37,7 @@ public class Person {
         this.birthDate = birthDate;
         this.phone = phone;
         this.email = email;
+        this.bankAccount = bankAccount;
     }
 
     public String getFirstName() {
@@ -89,5 +102,13 @@ public class Person {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public BankAccount getBankAccount() {
+        return bankAccount;
+    }
+
+    public void setBankAccount(BankAccount bankAccount) {
+        this.bankAccount = bankAccount;
     }
 }
