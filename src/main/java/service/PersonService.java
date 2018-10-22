@@ -4,6 +4,8 @@ import POJO.Person;
 import exception.PersonServiceException;
 import util.StringUtility;
 
+import java.time.LocalDate;
+
 /**
  * @author Petteri Salonurmi
  *
@@ -46,6 +48,8 @@ public class PersonService {
         person.setLastName(validateAndReturnLastName(receivedPerson));
         person.setPassword(receivedPerson.getPassword()); //Already validated pre method call.
         person.setUsername(validateAndReturnUsername(receivedPerson));
+        person.setCountry(receivedPerson.getCountry()); //Error thrown in REST if the country is not in accepted list.
+        person.setBirthDate(validateAndReturnBirthdate(receivedPerson));
 
         return person;
     }
@@ -111,7 +115,13 @@ public class PersonService {
         return (stringUtility.isStringNotNullAndEmpty(password) && (password.length() > (passwordMinLength - 1)));
     }
 
-
+    /**
+     * validateAndReturnUsername
+     * Validates the username of the user.
+     * @param receivedPerson - The person Received from the front-end
+     * @return The username of the Person
+     * @throws PersonServiceException - Throw error if the username was empty, null or invalid.
+     */
     private String validateAndReturnUsername(Person receivedPerson) throws PersonServiceException {
         String regex = "^[a-zA-Z0-9]+(_[a-zA-Z0-9]+)";
         if (stringUtility.isStringNotNullAndEmpty(receivedPerson.getUsername())
@@ -120,6 +130,23 @@ public class PersonService {
             return receivedPerson.getUsername();
         } else {
             throw new PersonServiceException("Invalid username.");
+        }
+    }
+
+    /**
+     * validateAndReturnBirthdate
+     * Checks the validity of the given birthday and returns it.
+     * @param receivedPerson - The person received from the Front-end
+     * @return The birthday of the Person
+     * @throws PersonServiceException - Throw error if the birthday was null or invalid.
+     */
+    private LocalDate validateAndReturnBirthdate(Person receivedPerson) throws PersonServiceException {
+        LocalDate currentDate18YearsAgo = LocalDate.now().minusYears(18);
+
+        if ((receivedPerson.getBirthDate() != null) && receivedPerson.getBirthDate().isBefore(currentDate18YearsAgo)) {
+            return receivedPerson.getBirthDate();
+        } else {
+            throw new PersonServiceException("Invalid birthday.");
         }
     }
 

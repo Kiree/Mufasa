@@ -1,4 +1,5 @@
 import POJO.Person;
+import enumeration.CountryEnum;
 import exception.PersonServiceException;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,17 +25,18 @@ public class PersonServiceTest {
     private Person validPerson;
 	private String validFirstName = "Tom";
 	private String validLastName = "Sawyer";
+    private String validPassword = "ModernDayWarrior";
     private String validUsername = "Tom_S4wyer";
-	private String validPassword = "ModernDayWarrior";
-    private String validEmail = "tom.sawyer@rush.com";
+    private CountryEnum validCountry = CountryEnum.UNITED_KINGDOM;
     private LocalDate validBirthday = LocalDate.of(1981, 2, 28);
     private String validPhone = "1234567809";
+    private String validEmail = "tom.sawyer@rush.com";
 
 
 	@Before
 	public void init() {
 		personService = new PersonService();
-		validPerson = new Person(validFirstName, validLastName, validUsername, validPassword);
+		validPerson = new Person(validFirstName, validLastName, validUsername, validPassword, validCountry, validBirthday);
 	}
 
 	@Test (expected = PersonServiceException.class)
@@ -214,7 +216,24 @@ public class PersonServiceTest {
         Person receivedPerson = personService.createPersonFromRESTCall(validPerson);
         //Assert
         assertEquals("The username should be Tom_S4wyerRush", validUsername14characters, receivedPerson.getUsername());
+    }
 
+    @Test (expected = PersonServiceException.class)
+    public void testCreatePerson_birthdayNot18() throws PersonServiceException {
+        //Arrange
+        LocalDate currentDay = LocalDate.now();
+        validPerson.setBirthDate(currentDay);
+        //Act
+        Person receivedPerson = personService.createPersonFromRESTCall(validPerson);
+    }
+
+    @Test (expected =  PersonServiceException.class)
+    public void testCreatePerson_birthdayNull() throws PersonServiceException {
+	    //Arrange
+        LocalDate nullDay = null;
+        validPerson.setBirthDate(nullDay);
+        //Act
+        Person receivedPerson = personService.createPersonFromRESTCall(validPerson);
     }
 
     @Test
@@ -224,8 +243,10 @@ public class PersonServiceTest {
         //Assert
         assertEquals("The first name should be Tom", validFirstName, newPerson.getFirstName());
         assertEquals("The last name should be Sawyer.", validLastName, newPerson.getLastName());
-        assertEquals("The password should be ModernDayWarrior", validPassword, newPerson.getPassword());
         assertEquals("The username should be Tom_S4wyer", validUsername, newPerson.getUsername());
+        assertEquals("The password should be ModernDayWarrior", validPassword, newPerson.getPassword());
+        assertEquals("The country should be United Kingdom.", validCountry, newPerson.getCountry());
+        assertEquals("The birthday should be 28/02/1981", validBirthday, newPerson.getBirthDate());
     }
 
 }
