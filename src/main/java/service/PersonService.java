@@ -27,8 +27,8 @@ public class PersonService {
      * @return A new person created based on the service logic.
      * @throws PersonServiceException - Throw error if the passwords had shenanigans going on
      */
-    public Person restCall(Person receivedPerson, String secondPassword) throws PersonServiceException {
-        if (validatePasswordMatch(receivedPerson.getPassword(), secondPassword)) {
+    public Person restCall(Person receivedPerson, String secondPassword, String secondEmail) throws PersonServiceException {
+        if (validatePasswordMatch(receivedPerson.getPassword(), secondPassword) && validateEmailMatch(receivedPerson.getEmail(), secondEmail)) {
             return createPersonFromRESTCall(receivedPerson);
         } else {
             throw new PersonServiceException("Invalid password.");
@@ -51,6 +51,7 @@ public class PersonService {
         person.setCountry(receivedPerson.getCountry()); //Error thrown in REST if the country is not in accepted list.
         person.setBirthDate(validateAndReturnBirthday(receivedPerson));
         person.setPhone(validateAndReturnPhone(receivedPerson));
+        person.setEmail(receivedPerson.getEmail());
 
         return person;
     }
@@ -151,6 +152,13 @@ public class PersonService {
         }
     }
 
+    /**
+     * validateAndReturnPhone
+     * Checks the validity of the given phone number and returns it.
+     * @param receivedPerson - The person received from the Front-end
+     * @return The phone number of the Person
+     * @throws PersonServiceException - Throw error if the phone number was null, empty or invalid
+     */
     private String validateAndReturnPhone(Person receivedPerson) throws PersonServiceException {
         String regex = "^[0-9]+";
         if (stringUtility.isStringNotNullAndEmpty(receivedPerson.getPhone())
@@ -159,6 +167,19 @@ public class PersonService {
         } else {
             throw new PersonServiceException("Invalid phone number.");
         }
+    }
+
+    /**
+     * validateEmailMatch
+     * Validate if the emails received from front-end were empty, null and matched.
+     * @param firstEmail - The first email received from the Front-end
+     * @param secondEmail - The second email received from the front-end
+     * @return true/false, depending on if the emails were valid and matched
+     */
+    private boolean validateEmailMatch(String firstEmail, String secondEmail) {
+        return (stringUtility.isStringNotNullAndEmpty(firstEmail)
+                && stringUtility.isStringNotNullAndEmpty(secondEmail)
+                && firstEmail.equals(secondEmail));
     }
 
 }

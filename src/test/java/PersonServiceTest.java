@@ -37,7 +37,7 @@ public class PersonServiceTest {
 	public void init() {
 		personService = new PersonService();
 		validPerson = new Person(validFirstName, validLastName, validUsername, validPassword, validCountry,
-                                validBirthday, validPhone);
+                                validBirthday, validPhone, validEmail);
 	}
 
 	@Test (expected = PersonServiceException.class)
@@ -81,9 +81,9 @@ public class PersonServiceTest {
         //Arrange
         String firstPassword = null;
         String secondPassword = "Pictures";
-        validPerson.setUsername(firstPassword);
+        validPerson.setPassword(firstPassword);
         //Act
-        Person receivedPerson = personService.restCall(validPerson, secondPassword);
+        Person receivedPerson = personService.restCall(validPerson, secondPassword, validEmail);
     }
 
     @Test (expected = PersonServiceException.class)
@@ -91,9 +91,9 @@ public class PersonServiceTest {
         //Arrange
         String firstPassword = "";
         String secondPassword = "Pictures";
-        validPerson.setUsername(firstPassword);
+        validPerson.setPassword(firstPassword);
         //Act
-        Person receivedPerson = personService.restCall(validPerson, secondPassword);
+        Person receivedPerson = personService.restCall(validPerson, secondPassword, validEmail);
     }
 
     @Test (expected = PersonServiceException.class)
@@ -103,7 +103,7 @@ public class PersonServiceTest {
         String secondPassword = "Pictures";
         validPerson.setPassword(firstPassword);
         //Act
-        Person receivedPerson = personService.restCall(validPerson, secondPassword);
+        Person receivedPerson = personService.restCall(validPerson, secondPassword, validEmail);
         //Assert
         assertTrue("The password should be 8 characters or longer.", receivedPerson.getPassword().length() > 8);
     }
@@ -115,7 +115,7 @@ public class PersonServiceTest {
         String secondPassword = "Moving";
         validPerson.setPassword(firstPassword);
         //Act
-        Person receivedPerson = personService.restCall(validPerson, secondPassword);
+        Person receivedPerson = personService.restCall(validPerson, secondPassword, validEmail);
     }
 
     @Test (expected = PersonServiceException.class)
@@ -125,7 +125,7 @@ public class PersonServiceTest {
         String secondPassword = "Moving Pictures";
         validPerson.setPassword(firstPassword);
         //Act
-        Person receivedPerson = personService.restCall(validPerson, secondPassword);
+        Person receivedPerson = personService.restCall(validPerson, secondPassword, validEmail);
     }
 
     @Test
@@ -135,7 +135,7 @@ public class PersonServiceTest {
         String secondPassword = "Warrior!";
         validPerson.setPassword(firstPassword);
         //Act
-        Person receivedPerson = personService.restCall(validPerson, secondPassword);
+        Person receivedPerson = personService.restCall(validPerson, secondPassword, validEmail);
         //Assert
         assertEquals("The password should be Warrior!", firstPassword, receivedPerson.getPassword());
     }
@@ -147,7 +147,7 @@ public class PersonServiceTest {
         String secondPassword = "ModernDay";
         validPerson.setPassword(firstPassword);
         //Act
-        Person receivedPerson = personService.restCall(validPerson, secondPassword);
+        Person receivedPerson = personService.restCall(validPerson, secondPassword, validEmail);
         //Assert
         assertEquals("The password should be ModernDay", firstPassword, receivedPerson.getPassword());
     }
@@ -228,7 +228,7 @@ public class PersonServiceTest {
         Person receivedPerson = personService.createPersonFromRESTCall(validPerson);
     }
 
-    @Test (expected =  PersonServiceException.class)
+    @Test (expected = PersonServiceException.class)
     public void testCreatePerson_birthdayNull() throws PersonServiceException {
 	    //Arrange
         LocalDate nullDay = null;
@@ -237,7 +237,7 @@ public class PersonServiceTest {
         Person receivedPerson = personService.createPersonFromRESTCall(validPerson);
     }
 
-    @Test (expected =  PersonServiceException.class)
+    @Test (expected = PersonServiceException.class)
     public void testCreatePerson_phoneNull() throws PersonServiceException {
 	    //Arrange
         String nullPhone = null;
@@ -246,7 +246,7 @@ public class PersonServiceTest {
         Person receivedPerson = personService.createPersonFromRESTCall(validPerson);
     }
 
-    @Test (expected =  PersonServiceException.class)
+    @Test (expected = PersonServiceException.class)
     public void testCreatePerson_phoneEmpty() throws PersonServiceException {
 	    //Arrange
         String emptyPhone = "";
@@ -255,13 +255,63 @@ public class PersonServiceTest {
         Person receivedPerson = personService.createPersonFromRESTCall(validPerson);
     }
 
-    @Test (expected =  PersonServiceException.class)
+    @Test (expected = PersonServiceException.class)
     public void testCreatePerson_phoneInvalidCharacters() throws PersonServiceException {
 	    //Arrange
         String invalidPhone = "1337Phone!";
         validPerson.setPhone(invalidPhone);
         //Act
         Person receivedPerson = personService.createPersonFromRESTCall(validPerson);
+    }
+
+    @Test (expected = PersonServiceException.class)
+    public void testRestCall_firstEmailNull() throws PersonServiceException {
+        //Arrange
+        String firstEmail = null;
+        String secondEmail = "tom.sawyer@rush.com";
+        validPerson.setUsername(firstEmail);
+        //Act
+        Person receivedPerson = personService.restCall(validPerson, validPassword, secondEmail);
+    }
+
+    @Test (expected = PersonServiceException.class)
+    public void testRestCall_firstEmailEmpty() throws PersonServiceException {
+        //Arrange
+        String firstEmail = "";
+        String secondEmail = "tom.sawyer@rush.com";
+        validPerson.setUsername(firstEmail);
+        //Act
+        Person receivedPerson = personService.restCall(validPerson, validPassword, secondEmail);
+    }
+
+    @Test (expected = PersonServiceException.class)
+    public void testRestCall_secondEmailNull() throws PersonServiceException {
+        //Arrange
+        String firstEmail = "tom.sawyer@rush.com";
+        String secondEmail = null;
+        validPerson.setUsername(firstEmail);
+        //Act
+        Person receivedPerson = personService.restCall(validPerson, validPassword, secondEmail);
+    }
+
+    @Test (expected = PersonServiceException.class)
+    public void testRestCall_secondEmailEmpty() throws PersonServiceException {
+        //Arrange
+        String firstEmail = "tom.sawyer@rush.com";
+        String secondEmail = "";
+        validPerson.setUsername(firstEmail);
+        //Act
+        Person receivedPerson = personService.restCall(validPerson, validPassword, secondEmail);
+    }
+
+    @Test (expected = PersonServiceException.class)
+    public void testRestCall_emailNotMatch() throws PersonServiceException {
+        //Arrange
+        String firstEmail = "tom.sawyer@rush.com";
+        String secondEmail = "tom.sawyer@rush.fi";
+        validPerson.setUsername(firstEmail);
+        //Act
+        Person receivedPerson = personService.restCall(validPerson, validPassword, secondEmail);
     }
 
     @Test
@@ -276,6 +326,7 @@ public class PersonServiceTest {
         assertEquals("The country should be United Kingdom.", validCountry, newPerson.getCountry());
         assertEquals("The birthday should be 28/02/1981", validBirthday, newPerson.getBirthDate());
         assertEquals("The phone number should be 1234567809", validPhone, newPerson.getPhone());
+        assertEquals("The email should be tom.sawyer@rush.com", validEmail, newPerson.getEmail());
     }
 
 }
