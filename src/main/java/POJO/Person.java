@@ -38,10 +38,12 @@ public class Person {
      * @param firstName - The first name of the Person.
      * @param lastName - The last name of the Person.
      * @param password - The password of the Person.
+     * @param username - The username of the Person.
      */
-    public Person(String firstName, String lastName, String password) {
+    public Person(String firstName, String lastName, String username, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.username = username;
         this.password = password;
     }
 

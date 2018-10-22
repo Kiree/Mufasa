@@ -29,7 +29,7 @@ public class PersonService {
         if (validatePasswordMatch(receivedPerson.getPassword(), secondPassword)) {
             return createPersonFromRESTCall(receivedPerson);
         } else {
-            throw new PersonServiceException();
+            throw new PersonServiceException("Invalid password.");
         }
     }
 
@@ -45,6 +45,7 @@ public class PersonService {
         person.setFirstName(validateAndReturnFirstName(receivedPerson));
         person.setLastName(validateAndReturnLastName(receivedPerson));
         person.setPassword(receivedPerson.getPassword()); //Already validated pre method call.
+        person.setUsername(validateAndReturnUsername(receivedPerson));
 
         return person;
     }
@@ -59,10 +60,10 @@ public class PersonService {
      */
     private String validateAndReturnFirstName(Person receivedPerson) throws PersonServiceException {
         String regex = "[a-zA-Z]+";
-        if (stringUtility.isStringNOtNullAndEmpty(receivedPerson.getFirstName()) && receivedPerson.getFirstName().matches(regex)) {
+        if (stringUtility.isStringNotNullAndEmpty(receivedPerson.getFirstName()) && receivedPerson.getFirstName().matches(regex)) {
             return receivedPerson.getFirstName();
         } else {
-            throw new PersonServiceException();
+            throw new PersonServiceException("Invalid first name.");
         }
     }
 
@@ -76,10 +77,10 @@ public class PersonService {
      */
     private String validateAndReturnLastName(Person receivedPerson) throws PersonServiceException {
         String regex = "[a-zA-Z]+";
-        if (stringUtility.isStringNOtNullAndEmpty(receivedPerson.getLastName()) && receivedPerson.getLastName().matches(regex)) {
+        if (stringUtility.isStringNotNullAndEmpty(receivedPerson.getLastName()) && receivedPerson.getLastName().matches(regex)) {
             return receivedPerson.getLastName();
         } else {
-            throw new PersonServiceException();
+            throw new PersonServiceException("Invalid last name.");
         }
     }
 
@@ -107,7 +108,19 @@ public class PersonService {
      * @return true/false depending on if the password was valid or not.
      */
     private boolean isValidPassword(String password) {
-        return (stringUtility.isStringNOtNullAndEmpty(password) && (password.length() > (passwordMinLength - 1)));
+        return (stringUtility.isStringNotNullAndEmpty(password) && (password.length() > (passwordMinLength - 1)));
+    }
+
+
+    private String validateAndReturnUsername(Person receivedPerson) throws PersonServiceException {
+        String regex = "^[a-zA-Z0-9]+(_[a-zA-Z0-9]+)";
+        if (stringUtility.isStringNotNullAndEmpty(receivedPerson.getUsername())
+                && receivedPerson.getUsername().matches(regex)
+                && (receivedPerson.getUsername().length() < 16)) {
+            return receivedPerson.getUsername();
+        } else {
+            throw new PersonServiceException("Invalid username.");
+        }
     }
 
 }

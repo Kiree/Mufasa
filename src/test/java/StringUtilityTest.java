@@ -26,7 +26,7 @@ public class StringUtilityTest {
         //Arrange
         String nullString = null;
         //Act
-        boolean result = stringUtility.isStringNOtNullAndEmpty(nullString);
+        boolean result = stringUtility.isStringNotNullAndEmpty(nullString);
         //Assert
         assertFalse("The result should be false.", result);
     }
@@ -36,7 +36,7 @@ public class StringUtilityTest {
         //Arrange
         String emptyString = "";
         //Act
-        boolean result = stringUtility.isStringNOtNullAndEmpty(emptyString);
+        boolean result = stringUtility.isStringNotNullAndEmpty(emptyString);
         //Assert
         assertFalse("The result should be false.", result);
     }
@@ -46,7 +46,7 @@ public class StringUtilityTest {
         //Arrange
         String validString = "Hello, World!";
         //Act
-        boolean result = stringUtility.isStringNOtNullAndEmpty(validString);
+        boolean result = stringUtility.isStringNotNullAndEmpty(validString);
         //Assert
         assertTrue("The result should be true.", result);
     }

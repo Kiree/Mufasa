@@ -8,6 +8,7 @@ import java.time.LocalDate;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * @author Petteri Salonurmi
@@ -20,17 +21,20 @@ public class PersonServiceTest {
 
 	private PersonService personService;
 
+    private Person validPerson;
 	private String validFirstName = "Tom";
 	private String validLastName = "Sawyer";
-    private String validUsername = "Tom_Sawyer";
+    private String validUsername = "Tom_S4wyer";
 	private String validPassword = "ModernDayWarrior";
     private String validEmail = "tom.sawyer@rush.com";
     private LocalDate validBirthday = LocalDate.of(1981, 2, 28);
     private String validPhone = "1234567809";
 
+
 	@Before
 	public void init() {
 		personService = new PersonService();
+		validPerson = new Person(validFirstName, validLastName, validUsername, validPassword);
 	}
 
 	@Test (expected = PersonServiceException.class)
@@ -74,12 +78,9 @@ public class PersonServiceTest {
         //Arrange
         String firstPassword = null;
         String secondPassword = "Pictures";
-        Person restPerson = new Person();
-        restPerson.setFirstName(validFirstName);
-        restPerson.setLastName(validLastName);
-        restPerson.setPassword(firstPassword);
+        validPerson.setUsername(firstPassword);
         //Act
-        Person receivedPerson = personService.restCall(restPerson, secondPassword);
+        Person receivedPerson = personService.restCall(validPerson, secondPassword);
     }
 
     @Test (expected = PersonServiceException.class)
@@ -87,12 +88,9 @@ public class PersonServiceTest {
         //Arrange
         String firstPassword = "";
         String secondPassword = "Pictures";
-        Person restPerson = new Person();
-        restPerson.setFirstName(validFirstName);
-        restPerson.setLastName(validLastName);
-        restPerson.setPassword(firstPassword);
+        validPerson.setUsername(firstPassword);
         //Act
-        Person receivedPerson = personService.restCall(restPerson, secondPassword);
+        Person receivedPerson = personService.restCall(validPerson, secondPassword);
     }
 
     @Test (expected = PersonServiceException.class)
@@ -100,12 +98,9 @@ public class PersonServiceTest {
         //Arrange
         String firstPassword = "Moving";
         String secondPassword = "Pictures";
-        Person restPerson = new Person();
-        restPerson.setFirstName(validFirstName);
-        restPerson.setLastName(validLastName);
-        restPerson.setPassword(firstPassword);
+        validPerson.setPassword(firstPassword);
         //Act
-        Person receivedPerson = personService.restCall(restPerson, secondPassword);
+        Person receivedPerson = personService.restCall(validPerson, secondPassword);
         //Assert
         assertTrue("The password should be 8 characters or longer.", receivedPerson.getPassword().length() > 8);
     }
@@ -115,12 +110,9 @@ public class PersonServiceTest {
         //Arrange
         String firstPassword = "Pictures";
         String secondPassword = "Moving";
-        Person restPerson = new Person();
-        restPerson.setFirstName(validFirstName);
-        restPerson.setLastName(validLastName);
-        restPerson.setPassword(firstPassword);
+        validPerson.setPassword(firstPassword);
         //Act
-        Person receivedPerson = personService.restCall(restPerson, secondPassword);
+        Person receivedPerson = personService.restCall(validPerson, secondPassword);
     }
 
     @Test (expected = PersonServiceException.class)
@@ -128,12 +120,9 @@ public class PersonServiceTest {
         //Arrange
         String firstPassword = "Warrior!";
         String secondPassword = "Moving Pictures";
-        Person restPerson = new Person();
-        restPerson.setFirstName(validFirstName);
-        restPerson.setLastName(validLastName);
-        restPerson.setPassword(firstPassword);
+        validPerson.setPassword(firstPassword);
         //Act
-        Person receivedPerson = personService.restCall(restPerson, secondPassword);
+        Person receivedPerson = personService.restCall(validPerson, secondPassword);
     }
 
     @Test
@@ -141,12 +130,9 @@ public class PersonServiceTest {
         //Arrange
         String firstPassword = "Warrior!";
         String secondPassword = "Warrior!";
-        Person restPerson = new Person();
-        restPerson.setFirstName(validFirstName);
-        restPerson.setLastName(validLastName);
-        restPerson.setPassword(firstPassword);
+        validPerson.setPassword(firstPassword);
         //Act
-        Person receivedPerson = personService.restCall(restPerson, secondPassword);
+        Person receivedPerson = personService.restCall(validPerson, secondPassword);
         //Assert
         assertEquals("The password should be Warrior!", firstPassword, receivedPerson.getPassword());
     }
@@ -156,26 +142,90 @@ public class PersonServiceTest {
         //Arrange
         String firstPassword = "ModernDay";
         String secondPassword = "ModernDay";
-        Person restPerson = new Person();
-        restPerson.setFirstName(validFirstName);
-        restPerson.setLastName(validLastName);
-        restPerson.setPassword(firstPassword);
+        validPerson.setPassword(firstPassword);
         //Act
-        Person receivedPerson = personService.restCall(restPerson, secondPassword);
+        Person receivedPerson = personService.restCall(validPerson, secondPassword);
         //Assert
         assertEquals("The password should be ModernDay", firstPassword, receivedPerson.getPassword());
     }
 
+    @Test (expected = PersonServiceException.class)
+    public void testCreatePerson_usernameInvalidCharacter() throws PersonServiceException {
+        //Arrange
+        String invalidCharacterUsername = "Tom_Sawyer!";
+        validPerson.setUsername(invalidCharacterUsername);
+        //Act
+        Person receivedPerson = personService.createPersonFromRESTCall(validPerson);
+    }
+
+    @Test (expected = PersonServiceException.class)
+    public void testCreatePerson_usernameTooLong() throws PersonServiceException {
+        //Arrange
+        String tooLongUsername = "Moving_Pictures1981";
+        validPerson.setUsername(tooLongUsername);
+        //Act
+        Person receivedPerson = personService.createPersonFromRESTCall(validPerson);
+    }
+
+    @Test (expected = PersonServiceException.class)
+    public void testCreatePerson_usernameTooManyUnderscores() throws PersonServiceException {
+        //Arrange
+        String underscoreUsername = "_TOM_SAWYER_";
+        validPerson.setUsername(underscoreUsername);
+        //Act
+        Person receivedPerson = personService.createPersonFromRESTCall(validPerson);
+    }
+
+    @Test (expected = PersonServiceException.class)
+    public void testCreatePerson_usernameEmpty() throws PersonServiceException {
+        //Arrange
+        String emptyUsername = "";
+        validPerson.setUsername(emptyUsername);
+        //Act
+        Person receivedPerson = personService.createPersonFromRESTCall(validPerson);
+    }
+
+    @Test (expected = PersonServiceException.class)
+    public void testCreatePerson_usernameNull() throws PersonServiceException {
+        //Arrange
+        String nullUsername = null;
+        validPerson.setUsername(nullUsername);
+        //Act
+        Person receivedPerson = personService.createPersonFromRESTCall(validPerson);
+    }
+
+    @Test
+    public void testCreatePerson_usernameValid15Characters() throws PersonServiceException {
+        //Arrange
+        String validUsername15characters = "Tom_S4wyerRush1";
+        validPerson.setUsername(validUsername15characters);
+        //Act
+        Person receivedPerson = personService.createPersonFromRESTCall(validPerson);
+        //Assert
+        assertEquals("The username should be Tom_S4wyerRush1", validUsername15characters, receivedPerson.getUsername());
+    }
+
+    @Test
+    public void testCreatePerson_usernameValid14Characters() throws PersonServiceException {
+	    //Arrange
+        String validUsername14characters = "Tom_S4wyerRush";
+        validPerson.setUsername(validUsername14characters);
+        //Act
+        Person receivedPerson = personService.createPersonFromRESTCall(validPerson);
+        //Assert
+        assertEquals("The username should be Tom_S4wyerRush", validUsername14characters, receivedPerson.getUsername());
+
+    }
+
     @Test
     public void testCreatePerson_validPerson() throws PersonServiceException {
-        //Arrange
-        Person restPerson = new Person(validFirstName, validLastName, validPassword);
         //Act
-        Person newPerson = personService.createPersonFromRESTCall(restPerson);
+        Person newPerson = personService.createPersonFromRESTCall(validPerson);
         //Assert
         assertEquals("The first name should be Tom", validFirstName, newPerson.getFirstName());
         assertEquals("The last name should be Sawyer.", validLastName, newPerson.getLastName());
         assertEquals("The password should be ModernDayWarrior", validPassword, newPerson.getPassword());
+        assertEquals("The username should be Tom_S4wyer", validUsername, newPerson.getUsername());
     }
 
 }
