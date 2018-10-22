@@ -23,10 +23,39 @@ public class Person {
     private String email;
     private BankAccount bankAccount; //MUST NOT BE STORED LOCALLY
 
+    /**
+     * Person
+     * The default constructor.
+     */
     public Person() {
 
     }
 
+    /**
+     * Person
+     * A more simple constructor with only some of the parameters
+     *
+     * @param firstName - The first name of the Person.
+     */
+    public Person(String firstName) {
+        this.firstName = firstName;
+    }
+
+
+    /**
+     * Person
+     * The full constructor.
+     *
+     * @param firstName - The first name of the person
+     * @param lastName - The last name of the person
+     * @param username - The username of the person
+     * @param password - The password of the person
+     * @param country - The country of the person
+     * @param birthDate - The birthdate of the person
+     * @param phone - The phone number of the person
+     * @param email - The email of the person
+     * @param bankAccount - The BankAccount of the person
+     */
     public Person(String firstName, String lastName, String username, String password, CountryEnum country,
            Date birthDate, String phone, String email, BankAccount bankAccount) {
         this.firstName = firstName;

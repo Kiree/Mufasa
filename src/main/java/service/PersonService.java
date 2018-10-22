@@ -1,8 +1,8 @@
 package service;
 
 import POJO.Person;
-
-import java.util.logging.Logger;
+import exception.PersonServiceException;
+import util.StringUtility;
 
 /**
  * @author Petteri Salonurmi
@@ -13,18 +13,40 @@ import java.util.logging.Logger;
  */
 public class PersonService {
 
-    private static final Logger logger = Logger.getLogger(PersonService.class.getName());
+    private StringUtility stringUtility = new StringUtility();
 
-    public Person createPersonFromRESTCall(Person receivedPerson) {
+    /**
+     * createPersonFromRESTCall
+     * Creates a new person person based on the one received from the REST layer.
+     *
+     * @param receivedPerson - The person received from the REST API call.
+     * @return person - The formatted and evaluated person based on the received person.
+     */
+    public Person createPersonFromRESTCall(Person receivedPerson) throws PersonServiceException {
+
         Person person = new Person();
-
-        logger.info("Created a new person.");
+        if (isValidName(receivedPerson.getFirstName())) {
+            person.setFirstName(receivedPerson.getFirstName());
+        }
 
         return person;
     }
 
-    private boolean validateName(String nameToBeValidated) {
-        return false;
+    /**
+     * isValidName
+     * Validates the given name against the regex.
+     *
+     * @param nameToBeValidated - The name that needs to be validated
+     * @return true/false depending on if the regex matched.
+     * @throws PersonServiceException - Throw error if the name was null or empty
+     */
+    private boolean isValidName(String nameToBeValidated) throws PersonServiceException {
+        if (stringUtility.isStringNOtNullAndEmpty(nameToBeValidated)) {
+            String regex = "[a-zA-Z]";
+            return nameToBeValidated.matches(regex);
+        } else {
+            throw new PersonServiceException();
+        }
     }
 
 }
