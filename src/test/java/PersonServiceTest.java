@@ -47,7 +47,7 @@ public class PersonServiceTest {
 		//Act
 		Person newPerson = personService.createPersonFromRESTCall(restPerson);
 		//Assert
-		assertEquals("The first name should be Tom.", firstName, restPerson.getFirstName());
+		assertEquals("The first name should be Tom.", firstName, newPerson.getFirstName());
 	}
 
 }

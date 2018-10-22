@@ -23,12 +23,10 @@ public class PersonService {
      * @return person - The formatted and evaluated person based on the received person.
      */
     public Person createPersonFromRESTCall(Person receivedPerson) throws PersonServiceException {
-
         Person person = new Person();
         if (isValidName(receivedPerson.getFirstName())) {
             person.setFirstName(receivedPerson.getFirstName());
         }
-
         return person;
     }
 
@@ -42,7 +40,7 @@ public class PersonService {
      */
     private boolean isValidName(String nameToBeValidated) throws PersonServiceException {
         if (stringUtility.isStringNOtNullAndEmpty(nameToBeValidated)) {
-            String regex = "[a-zA-Z]";
+            String regex = "[a-zA-Z]+";
             return nameToBeValidated.matches(regex);
         } else {
             throw new PersonServiceException();
