@@ -14,6 +14,24 @@ import util.StringUtility;
 public class PersonService {
 
     private StringUtility stringUtility = new StringUtility();
+    private final static int passwordMinLength = 8;
+
+    /**
+     * restCall
+     * Simulates a REST called received from the front-end. In reality should be in a controller class.
+     *
+     * @param receivedPerson - The person received from the frontend
+     * @param secondPassword - The second password received from the frontend
+     * @return A new person created based on the service logic.
+     * @throws PersonServiceException - Throw error if the passwords had shenanigans going on
+     */
+    public Person restCall(Person receivedPerson, String secondPassword) throws PersonServiceException {
+        if (validatePasswordMatch(receivedPerson.getPassword(), secondPassword)) {
+            return createPersonFromRESTCall(receivedPerson);
+        } else {
+            throw new PersonServiceException();
+        }
+    }
 
     /**
      * createPersonFromRESTCall
@@ -24,32 +42,72 @@ public class PersonService {
      */
     public Person createPersonFromRESTCall(Person receivedPerson) throws PersonServiceException {
         Person person = new Person();
-        if (isValidName(receivedPerson.getFirstName())) {
-            person.setFirstName(receivedPerson.getFirstName());
-        }
-
-        if(isValidName(receivedPerson.getLastName())) {
-            person.setLastName(receivedPerson.getLastName());
-        }
+        person.setFirstName(validateAndReturnFirstName(receivedPerson));
+        person.setLastName(validateAndReturnLastName(receivedPerson));
+        person.setPassword(receivedPerson.getPassword()); //Already validated pre method call.
 
         return person;
     }
 
     /**
-     * isValidName
-     * Validates the given name against the regex.
+     * validateAndReturnFirstName
+     * Validates the given person's first name against the regex and returns it
      *
-     * @param nameToBeValidated - The name that needs to be validated
-     * @return true/false depending on if the regex matched.
+     * @param receivedPerson - The person whose name needs to be validated
+     * @return receivedPerson.getFirstName() - The validated name
      * @throws PersonServiceException - Throw error if the name was null or empty
      */
-    private boolean isValidName(String nameToBeValidated) throws PersonServiceException {
-        if (stringUtility.isStringNOtNullAndEmpty(nameToBeValidated)) {
-            String regex = "[a-zA-Z]+";
-            return nameToBeValidated.matches(regex);
+    private String validateAndReturnFirstName(Person receivedPerson) throws PersonServiceException {
+        String regex = "[a-zA-Z]+";
+        if (stringUtility.isStringNOtNullAndEmpty(receivedPerson.getFirstName()) && receivedPerson.getFirstName().matches(regex)) {
+            return receivedPerson.getFirstName();
         } else {
             throw new PersonServiceException();
         }
+    }
+
+    /**
+     * validateAndReturnLastName
+     * Validates the given person's last name against the regex and sets it
+     *
+     * @param receivedPerson - The person whose name needs to be validated
+     * @return receivedPerson.getLastName() - The validated name
+     * @throws PersonServiceException - Throw error if the name was null or empty
+     */
+    private String validateAndReturnLastName(Person receivedPerson) throws PersonServiceException {
+        String regex = "[a-zA-Z]+";
+        if (stringUtility.isStringNOtNullAndEmpty(receivedPerson.getLastName()) && receivedPerson.getLastName().matches(regex)) {
+            return receivedPerson.getLastName();
+        } else {
+            throw new PersonServiceException();
+        }
+    }
+
+
+    /**
+     * validatePasswordMatch
+     * Checks that the first and second passwords match.
+     *
+     * @param firstPassword - The first password
+     * @param secondPassword - The second password
+     * @return True/false, depending on if the passwords were valid and matched.
+     */
+    private boolean validatePasswordMatch(String firstPassword, String secondPassword) {
+        if (isValidPassword(firstPassword) && isValidPassword(secondPassword)) {
+            return firstPassword.equals(secondPassword);
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * isValidPassword
+     * Validates the given password against the password criteria.
+     * @param password - The password to be checked.
+     * @return true/false depending on if the password was valid or not.
+     */
+    private boolean isValidPassword(String password) {
+        return (stringUtility.isStringNOtNullAndEmpty(password) && (password.length() > (passwordMinLength - 1)));
     }
 
 }

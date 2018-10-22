@@ -1,8 +1,12 @@
+import POJO.CreditCard;
 import org.junit.Before;
 import org.junit.Test;
 import service.CreditCardService;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Petteri Salonurmi
@@ -26,6 +30,17 @@ public class CreditCardServiceTest {
         //Act
         //Assert
         fail("TODO");
+    }
+
+    @Test
+    public void testMockCreditCard() {
+        //Arrange
+        CreditCard creditCardMock = mock(CreditCard.class);
+        when(creditCardMock.getHolderName()).thenReturn("Obi-Wan Kenobi");
+        //Act
+        String holderName = creditCardMock.getHolderName();
+        //Assert
+        assertEquals("The name should be Obi-Wan Kenobi.", "Obi-Wan Kenobi", holderName);
     }
 
 }

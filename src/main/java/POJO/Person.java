@@ -2,7 +2,7 @@ package POJO;
 
 import enumeration.CountryEnum;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * @author Petteri Salonurmi
@@ -14,14 +14,11 @@ import java.util.Date;
 public class Person {
 
     private String firstName;
-
-
-
     private String lastName;
     private String username;
     private String password;
     private CountryEnum country;
-    private Date birthDate;
+    private LocalDate birthDate;
     private String phone;
     private String email;
     private BankAccount bankAccount; //MUST NOT BE STORED LOCALLY
@@ -40,10 +37,12 @@ public class Person {
      *
      * @param firstName - The first name of the Person.
      * @param lastName - The last name of the Person.
+     * @param password - The password of the Person.
      */
-    public Person(String firstName, String lastName) {
+    public Person(String firstName, String lastName, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.password = password;
     }
 
 
@@ -56,13 +55,13 @@ public class Person {
      * @param username - The username of the person
      * @param password - The password of the person
      * @param country - The country of the person
-     * @param birthDate - The birthdate of the person
+     * @param birthDate - The birth date of the person
      * @param phone - The phone number of the person
      * @param email - The email of the person
      * @param bankAccount - The BankAccount of the person
      */
     public Person(String firstName, String lastName, String username, String password, CountryEnum country,
-           Date birthDate, String phone, String email, BankAccount bankAccount) {
+           LocalDate birthDate, String phone, String email, BankAccount bankAccount) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
@@ -114,11 +113,11 @@ public class Person {
         this.country = country;
     }
 
-    public Date getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
 
